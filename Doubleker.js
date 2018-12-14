@@ -1,4 +1,5 @@
-class Doubleker extends LivingCreature{
+var LivingCreature = require('/.LivingCreature.js');
+module.exports = class Doubleker extends LivingCreature{
     constructor(x, y, index){
         super(x, y, index);
         this.energy = 5;
@@ -28,7 +29,7 @@ class Doubleker extends LivingCreature{
 
     mult() {
 
-        var empty = random(this.chooseCell(0));
+        var empty = randomnumber(this.chooseCell(0));
 
         if (empty && this.energy > 11) {
             var newX = empty[0];
@@ -42,7 +43,7 @@ class Doubleker extends LivingCreature{
 
     move() {
 
-        var empty = random(this.chooseCell(0));
+        var empty = randomnumber(this.chooseCell(0));
         this.energy--;
 
         if (empty) {
@@ -58,9 +59,9 @@ class Doubleker extends LivingCreature{
 
     eat() {
 
-        var food = random(this.chooseCell(2));
-        var food1 = random(this.chooseCell(5));
-        var food2 = random(this.chooseCell(1));
+        var food = randomnumber(this.chooseCell(2));
+        var food1 = randomnumber(this.chooseCell(5));
+        var food2 = randomnumber(this.chooseCell(1));
         if (food) {
 
             var newX = food[0];
@@ -141,3 +142,5 @@ class Doubleker extends LivingCreature{
     }
 
 }
+
+var randomnumber = matrix[Math.floor(Math.random()*matrix.length)];

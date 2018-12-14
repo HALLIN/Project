@@ -1,4 +1,5 @@
-class Gishatich extends LivingCreature{
+var LivingCreature = require('/.LivingCreature.js');
+module.exports = class Gishatich extends LivingCreature{
     constructor(x, y, index){
         super(x, y, index);
         this.energy = 3;
@@ -24,7 +25,7 @@ class Gishatich extends LivingCreature{
     }
     mult() {
 
-        var empty = random(this.chooseCell(0));
+        var empty = randomnumber(this.chooseCell(0));
 
         if (empty && this.energy > 15) {
             var newX = empty[0];
@@ -38,7 +39,7 @@ class Gishatich extends LivingCreature{
 
     move() {
 
-        var empty = random(this.chooseCell(0));
+        var empty = randomnumber(this.chooseCell(0));
         this.energy--;
 
         if (empty) {
@@ -54,9 +55,9 @@ class Gishatich extends LivingCreature{
 
     eat() {
 
-        var food = random(this.chooseCell(2));
-        var food1 = random(this.chooseCell(1));
-        var food2 = random(this.chooseCell(4));
+        var food = randomnumber(this.chooseCell(2));
+        var food1 = randomnumber(this.chooseCell(1));
+        var food2 = randomnumber(this.chooseCell(4));
         if (food) {
 
             var newX = food[0];
@@ -135,3 +136,5 @@ class Gishatich extends LivingCreature{
     }
 
 }
+
+var randomnumber = matrix[Math.floor(Math.random()*matrix.length)];
