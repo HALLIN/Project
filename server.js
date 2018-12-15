@@ -1,39 +1,71 @@
-
-var matrix = [
-    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 5],
-    // [0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-    // [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
-    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5]
-
-];
-
-var Grass = require('/.Grass.js');
-var Grass1 = require('/.Grass1.js');
-var Gishatich = require('/.Gishatich.js');
-var Doubleker = require('/.Doubleker.js');
-var Xotaker = require('/.Xotaker.js');
-
+var express = require('express');
+var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var messages = [];
 
 var n = 20;
-var elem = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5]
-for (y = 0; y < n; y++) {
+var m = 20;
 
-    matrix.push([])
-    for (x = 0; x < n; x++) {
-        var r = Math.floor(Math.random() * elem.length);
-        matrix[y].push(elem[r]);
-    }
+app.use(express.static("."));
+app.get('/', function (req, res) {
+   res.redirect('index.html');
+});
+server.listen(3000);
+
+function getRandomArbitrary(min,max){
+    return Math.random() * (max - min) + min;
 }
+
+function FillMatrix(n,m)
+{
+    matrix = [];
+    for(var i =0;i<n;i++)
+    {
+        matrix.push([]);
+        for (var j = 0;j<m;j++){
+            matrix[i].push(Math.round(getRandomArbitrary(0,5)));
+        }
+    }
+    return matrix;
+}
+
+
+//matrix = [
+//    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
+//    // [0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 5],
+//    // [0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
+//    // [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+//    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5]
+//
+//];
+matrix = FillMatrix(n,m);
+Grass = require('./Grass.js');
+Grass1 = require('./Grass1.js');
+Gishatich = require('./Gishatich.js');
+Doubleker = require('./Doubleker.js');
+Xotaker = require('./Xotaker.js');
+
+
+//var n = 20;
+//var elem = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5]
+//for (y = 0; y < n; y++) {
+//
+//    matrix.push([])
+//    for (x = 0; x < n; x++) {
+//        var r = Math.floor(Math.random() * elem.length);
+//        matrix[y].push(elem[r]);
+//    }
+//}
 
 var gr = new Grass(5, 4, 1);
 var d = gr.chooseCell(1);
@@ -41,11 +73,11 @@ console.log(d);
 
 
 
-var grassArr = [];
-var grass1Arr = [];
-var xotakerArr = [];
-var gishatichArr = [];
-var doublekerArr = [];
+grassArr = [];
+grass1Arr = [];
+xotakerArr = [];
+gishatichArr = [];
+doublekerArr = [];
 
 for (var y = 0; y < matrix.length; y++) {
     for (var x = 0; x < matrix[y].length; x++) {
@@ -83,40 +115,9 @@ for (var y = 0; y < matrix.length; y++) {
 }
 console.log(grassArr);
 
-
-var side = 35;
-
 setInterval(drawurish,200);
 
 function drawurish() {
-
-    for (var y = 0; y < matrix.length; y++) {
-        for (var x = 0; x < matrix[y].length; x++) {
-
-            if (matrix[y][x] == 1) {
-                fill("green");
-            }
-            else if (matrix[y][x] == 0) {
-                fill("#acacac");
-            }
-            else if (matrix[y][x] == 2) {
-                fill("yellow");
-            }
-            else if (matrix[y][x] == 3) {
-                fill("brown");
-            }
-            else if (matrix[y][x] == 4) {
-                fill("gray");
-            }
-            else if (matrix[y][x] == 5) {
-                fill("lime");
-            }
-            rect(x * side, y * side, side, side);
-            // fill("black")
-            // text(x + " " + y, x * side + side / 2, y * side + side / 2)
-
-        }
-    }
     for (var i in grassArr) {
 
         grassArr[i].mult();
@@ -146,4 +147,6 @@ function drawurish() {
         doublekerArr[i].move();
         doublekerArr[i].die();
     }
+
+    io.sockets.emit("matrix",matrix);
 }
