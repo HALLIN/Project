@@ -1,30 +1,28 @@
 var express = require('express');
 var app = express();
+var fs = require('fs');
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-var messages = [];
 
 var n = 20;
 var m = 20;
 
 app.use(express.static("."));
 app.get('/', function (req, res) {
-   res.redirect('index.html');
+    res.redirect('index.html');
 });
 server.listen(3000);
 
-function getRandomArbitrary(min,max){
+function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function FillMatrix(n,m)
-{
+function FillMatrix(n, m) {
     matrix = [];
-    for(var i =0;i<n;i++)
-    {
+    for (var i = 0; i < n; i++) {
         matrix.push([]);
-        for (var j = 0;j<m;j++){
-            matrix[i].push(Math.round(getRandomArbitrary(0,5)));
+        for (var j = 0; j < m; j++) {
+            matrix[i].push(Math.round(getRandomArbitrary(0, 5)));
         }
     }
     return matrix;
@@ -48,7 +46,7 @@ function FillMatrix(n,m)
 //    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5]
 //
 //];
-matrix = FillMatrix(n,m);
+matrix = FillMatrix(n, m);
 Grass = require('./Grass.js');
 Grass1 = require('./Grass1.js');
 Gishatich = require('./Gishatich.js');
@@ -71,7 +69,12 @@ var gr = new Grass(5, 4, 1);
 var d = gr.chooseCell(1);
 console.log(d);
 
-
+weather = "Spring";
+numgrass = 0;
+numxotaker = 0;
+numgishatich = 0;
+numeraker = 0;
+numgrass1 = 0;
 
 grassArr = [];
 grass1Arr = [];
@@ -85,68 +88,115 @@ for (var y = 0; y < matrix.length; y++) {
 
             var xot1 = new Grass(x, y, 1);
             grassArr.push(xot1);
+            numgrass++
 
         }
         else if (matrix[y][x] == 2) {
 
             var ker1 = new Xotaker(x, y, 2);
             xotakerArr.push(ker1);
+            numxotaker++
 
         }
         else if (matrix[y][x] == 3) {
 
             var gz1 = new Gishatich(x, y, 3);
             gishatichArr.push(gz1);
+            numgishatich++
 
         }
         else if (matrix[y][x] == 4) {
 
             var dk1 = new Doubleker(x, y, 4);
             doublekerArr.push(dk1);
+            numeraker++
 
         }
         else if (matrix[y][x] == 5) {
 
             var gr12 = new Grass1(x, y, 5);
             grass1Arr.push(gr12);
+            numgrass1++
 
         }
     }
 }
 console.log(grassArr);
 
-setInterval(drawurish,200);
+setInterval(function () {
+    if (weather == "Spring") {
+        weather = "Summer";
+    }
+    else if (weather == "Summer") {
+        weather = "Autumn";
+    }
+    else if (weather == "Autumn") {
+        weather = "Winter";
+    }
+    else if (weather == "Winter") {
+        weather = "Spring";
+    }
+    io.sockets.emit("k", weather)
+}, 3000);
+
+
+function stat() {
+    var file = "stat.json";
+
+    var text = {
+        "Xoteri qanak": numgrass,
+        "Ujex xoteri qanak": numgrass1,
+        "Xotakerneri qanak": numxotaker,
+        "Gishatichneri qanak": numgishatich,
+        "Erakerneri qanak": numeraker
+    }
+    var myJSON = JSON.stringify(text)
+    fs.writeFileSync(file, myJSON)
+}
+
+
+setInterval(drawurish, 200);
 
 function drawurish() {
     for (var i in grassArr) {
-
-        grassArr[i].mult();
+        if (weather != "Winter") {
+            grassArr[i].mult();
+        }
     }
     for (var i in grass1Arr) {
-
-        grass1Arr[i].mult();
+        if (weather != "Winter") {
+            grass1Arr[i].mult();
+        }
     }
     for (var i in xotakerArr) {
-
+        if (weather != "Winter") {
+            xotakerArr[i].move();
+        }
         xotakerArr[i].eat();
         xotakerArr[i].mult();
-        xotakerArr[i].move();
         xotakerArr[i].die();
     }
     for (var i in gishatichArr) {
 
+        if (weather != "Autumn") {
+            gishatichArr[i].mult();
+        }
         gishatichArr[i].eat();
-        gishatichArr[i].mult();
         gishatichArr[i].move();
         gishatichArr[i].die();
     }
     for (var i in doublekerArr) {
 
-        doublekerArr[i].eat();
+        if (weather != "Spring") {
+            doublekerArr[i].eat();
+        }
+        if (weather != "Winter") {
+            doublekerArr[i].move();
+        }
         doublekerArr[i].mult();
-        doublekerArr[i].move();
         doublekerArr[i].die();
     }
 
-    io.sockets.emit("matrix",matrix);
+    io.sockets.emit("matrix", matrix);
 }
+stat();

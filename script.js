@@ -12,6 +12,9 @@ function setup() {
 
 
 }
+socket.on("k", function(weather){
+    document.getElementById('weather').innerText = weather;
+})
 function drawMatrix(matrix) {
 
     for (var y = 0; y < matrix.length; y++) {
