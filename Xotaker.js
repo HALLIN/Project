@@ -2,7 +2,7 @@ var LivingCreature = require('./LivingCreature.js');
 module.exports = class Xotaker extends LivingCreature{
     constructor(x, y, index){
         super(x, y, index);
-        this.energy = 4;
+        this.energy = 7;
     }
 
     getNewCoordinates() {

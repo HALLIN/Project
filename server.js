@@ -22,7 +22,7 @@ function FillMatrix(n, m) {
     for (var i = 0; i < n; i++) {
         matrix.push([]);
         for (var j = 0; j < m; j++) {
-            matrix[i].push(Math.round(getRandomArbitrary(0, 5)));
+            matrix[i].push(Math.round(getRandomArbitrary(0, 6)));
         }
     }
     return matrix;
@@ -169,11 +169,9 @@ function drawurish() {
         }
     }
     for (var i in xotakerArr) {
-        if (weather != "Winter") {
-            xotakerArr[i].move();
-        }
-        xotakerArr[i].eat();
         xotakerArr[i].mult();
+        xotakerArr[i].eat();
+        xotakerArr[i].move();
         xotakerArr[i].die();
     }
     for (var i in gishatichArr) {

@@ -2,7 +2,7 @@ var LivingCreature = require('./LivingCreature.js');
 module.exports = class Doubleker extends LivingCreature{
     constructor(x, y, index){
         super(x, y, index);
-        this.energy = 5;
+        this.energy = 7;
 
     }
 
