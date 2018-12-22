@@ -58,7 +58,7 @@ function drawMatrix(matrix) {
                 if (style == "black"){
                     fill("#593654")
                 }
-                fill("gray");
+                else fill("gray");
             }
             else if (matrix[y][x] == 5) {
                 if (style == "black"){
